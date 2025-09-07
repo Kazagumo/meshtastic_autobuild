@@ -23,7 +23,6 @@ on:
       pio_env:
         required: true
         type: string
-permissions: read-all
 
 jobs:
   pio-build:
@@ -81,7 +80,7 @@ jobs:
           allowUpdates: true
           tag: ${{ inputs.version }}
           commit: main
-          token: ${{secrets.ACTIONS_DEPLOY_KEY}}
+          token: ${{secrets.GITHUB_TOKEN}}
           replacesArtifacts: true
           artifacts: |
             release/*.bin
@@ -89,6 +88,38 @@ jobs:
             release/*.uf2
             release/*.hex
             release/*-ota.zip
+
+      - name: Cleanup Workflow Logs
+        uses: Mattraks/delete-workflow-runs@main
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          repository: ${{ github.repository }}
+          retain_days: 1
+        continue-on-error: true
+
+      - name: Delete Older Releases
+        uses: dev-drprasad/delete-older-releases@master
+        with:
+          keep_latest: 3
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        continue-on-error: true
+
+      - name: Cleanup Old Action Artifacts
+        uses: c-hive/gha-remove-artifacts@master
+        with:
+          age: '3 days'
+          skip-recent: 3
+        continue-on-error: true
+
+      - name: Cleanup Workflow Logs
+        uses: Mattraks/delete-workflow-runs@main
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          repository: ${{ github.repository }}
+          retain_days: 3
+        continue-on-error: true
 
       - name: Store binaries as an artifact
         uses: actions/upload-artifact@v4

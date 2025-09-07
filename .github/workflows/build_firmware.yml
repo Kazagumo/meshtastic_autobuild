@@ -45,6 +45,7 @@ jobs:
           for file in ./autobuild_tmp/patches/$PIO_PLATFORM/$PIO_ENV/*; do
             echo "apply patch $file"
             git apply ./autobuild_tmp/patches/$PIO_PLATFORM/$PIO_ENV/$file
+          done
 
       - name: Set OTA firmware source and target
         if: startsWith(inputs.platform, 'esp32')

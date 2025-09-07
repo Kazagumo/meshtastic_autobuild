@@ -12,7 +12,17 @@ on:
       pio_env:
         required: true
         type: string
-
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
+        type: string
+      platform:
+        required: true
+        type: string
+      pio_env:
+        required: true
+        type: string
 permissions: read-all
 
 jobs:

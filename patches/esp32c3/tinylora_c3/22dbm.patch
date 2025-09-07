@@ -1,0 +1,34 @@
+From c437e086cdc1b696892d66b1dc1f5ac04f6ba030 Mon Sep 17 00:00:00 2001
+From: whywilson <m.tools@qq.com>
+Date: Mon, 9 Jun 2025 09:01:29 +0800
+Subject: [PATCH] fix: update CN region power limit and comment out logging in
+ power limit function
+
+---
+ src/mesh/RadioInterface.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/mesh/RadioInterface.cpp b/src/mesh/RadioInterface.cpp
+index 06398e6c36d..4b613aacdaa 100644
+--- a/src/mesh/RadioInterface.cpp
++++ b/src/mesh/RadioInterface.cpp
+@@ -49,7 +49,7 @@ const RegionInfo regions[] = {
+     /*
+         https://lora-alliance.org/wp-content/uploads/2020/11/lorawan_regional_parameters_v1.0.3reva_0.pdf
+      */
+-    RDEF(CN, 470.0f, 510.0f, 100, 0, 19, true, false, false),
++    RDEF(CN, 470.0f, 510.0f, 100, 0, 22, true, false, false),
+ 
+     /*
+         https://lora-alliance.org/wp-content/uploads/2020/11/lorawan_regional_parameters_v1.0.3reva_0.pdf
+@@ -612,8 +612,8 @@ void RadioInterface::limitPower()
+         maxPower = myRegion->powerLimit;
+ 
+     if ((power > maxPower) && !devicestate.owner.is_licensed) {
+-        LOG_INFO("Lower transmit power because of regulatory limits");
+-        power = maxPower;
++        // LOG_INFO("Lower transmit power because of regulatory limits");
++        // power = maxPower;
+     }
+ 
+     if (TX_GAIN_LORA > 0) {

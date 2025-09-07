@@ -79,7 +79,7 @@ jobs:
           name: ${{ inputs.version }}
           allowUpdates: true
           tag: ${{ inputs.version }}
-          commit: master
+          commit: main
           token: ${{secrets.ACTIONS_DEPLOY_KEY}}
           replacesArtifacts: true
           artifacts: |

@@ -44,7 +44,7 @@ jobs:
           git clone https://github.com/Kazagumo/meshtastic_autobuild ./autobuild_tmp
           for file in ./autobuild_tmp/patches/$PIO_PLATFORM/$PIO_ENV/*; do
             echo "apply patch $file"
-            git apply ./autobuild_tmp/patches/$PIO_PLATFORM/$PIO_ENV/$file
+            git apply $file
           done
 
       - name: Set OTA firmware source and target

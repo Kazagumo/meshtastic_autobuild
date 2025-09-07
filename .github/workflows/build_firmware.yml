@@ -42,7 +42,9 @@ jobs:
           PIO_ENV: ${{ inputs.pio_env }}
         run: |
           git clone https://github.com/Kazagumo/meshtastic_autobuild ./autobuild_tmp
-          git apply ./autobuild_tmp/patches/$PIO_PLATFORM/$PIO_ENV/*.patch
+          for file in ./autobuild_tmp/patches/$PIO_PLATFORM/$PIO_ENV/*; do
+            echo "apply patch $file"
+            git apply ./autobuild_tmp/patches/$PIO_PLATFORM/$PIO_ENV/$file
 
       - name: Set OTA firmware source and target
         if: startsWith(inputs.platform, 'esp32')

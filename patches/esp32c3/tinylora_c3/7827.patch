@@ -1,0 +1,186 @@
+From fc9541afb3ef13a1dfb518726970bb2319d41ceb Mon Sep 17 00:00:00 2001
+From: Kazagumo <LachesisLegion@gmail.com>
+Date: Tue, 2 Sep 2025 01:44:06 +0900
+Subject: [PATCH 1/3] Add support for TinyLoRa-C3 board
+
+---
+ .../esp32c3/diy/tinylora_c3/platformio.ini    | 10 +++
+ variants/esp32c3/diy/tinylora_c3/variant.h    | 61 +++++++++++++++++++
+ 2 files changed, 71 insertions(+)
+ create mode 100644 variants/esp32c3/diy/tinylora_c3/platformio.ini
+ create mode 100644 variants/esp32c3/diy/tinylora_c3/variant.h
+
+diff --git a/variants/esp32c3/diy/tinylora_c3/platformio.ini b/variants/esp32c3/diy/tinylora_c3/platformio.ini
+new file mode 100644
+index 0000000000..750d8e4a24
+--- /dev/null
++++ b/variants/esp32c3/diy/tinylora_c3/platformio.ini
+@@ -0,0 +1,10 @@
++[env:tinylora_c3]
++extends = esp32c3_base
++board = esp32-c3-devkitm-1
++build_flags =
++  ${esp32_base.build_flags}
++  -D PRIVATE_HW
++  -I variants/esp32c3/diy/tinylora_c3
++  -D ARDUINO_USB_MODE=1
++  -D ARDUINO_USB_CDC_ON_BOOT=1
++board_level = extra
+\ No newline at end of file
+diff --git a/variants/esp32c3/diy/tinylora_c3/variant.h b/variants/esp32c3/diy/tinylora_c3/variant.h
+new file mode 100644
+index 0000000000..257559f652
+--- /dev/null
++++ b/variants/esp32c3/diy/tinylora_c3/variant.h
+@@ -0,0 +1,61 @@
++#ifndef _VARIANT_TINYLORA_C3_
++#define _VARIANT_TINYLORA_C3_
++
++// Board pins configuration for TinyLoRa-C3
++
++// Button
++#define BUTTON_PIN 9
++
++// LED
++#define LED_PIN 2
++#define LED_STATE_ON 1  // Pulled high when LED is lit.
++
++// Screen & GPS are not present.
++#define HAS_SCREEN 0
++#define HAS_GPS 0
++#undef GPS_RX_PIN
++#undef GPS_TX_PIN
++
++// LoRa chips
++#define USE_LLCC68
++#define USE_SX1262
++#define USE_SX1268
++
++// SPI
++#define LORA_SCK 10
++#define LORA_MISO 6
++#define LORA_MOSI 7
++#define LORA_CS 8
++
++// LoRa
++#define LORA_DIO0 RADIOLIB_NC   // NC
++#define LORA_DIO1 3             // IRQ
++#define LORA_DIO2 RADIOLIB_NC   // Attached internally to rfswitch.
++#define LORA_BUSY 4             
++#define LORA_RESET 5            
++
++#define SX126X_CS       LORA_CS
++#define SX126X_DIO1     LORA_DIO1
++#define SX126X_BUSY     LORA_BUSY
++#define SX126X_RESET    LORA_RESET
++#define SX126X_DIO2_AS_RF_SWITCH
++
++/* 
++
++Tested modules:
++| Mfr          | Module           | TCXO | RF Switch | Notes                                 |
++| ------------ | ---------------- | ---- | --------- | ------------------------------------- |
++| 255 Mesh     | 255MN-L03        | No   | Int       | LLCC68                                |
++| AI-Thinker   | RA-01SC          | No   | Int       | LLCC68                                |
++| AI-Thinker   | RA-01SC-P        | No   | Int       | LLCC68,29dbm tx power                 |
++| AI-Thinker   | RA-01S           | No   | Int       | SX1268                                |
++| AI-Thinker   | RA-01S-P         | No   | Int       | SX1268,29dbm tx power                 |
++| AI-Thinker   | RA-01SH          | No   | Int       | SX1262                                |
++| Heltec       | HT-RA62          | Yes  | Int       | SX1262                                |
++
++*/
++
++#define SX126X_DIO3_TCXO_VOLTAGE 1.8 // reserved for HT-RA62
++#define TCXO_OPTIONAL // make it so that the firmware can try both TCXO and XTAL
++
++#endif
+\ No newline at end of file
+
+From c2cd9cc48d256b6a801e14615369496571b127fe Mon Sep 17 00:00:00 2001
+From: Kazagumo <LachesisLegion@gmail.com>
+Date: Wed, 3 Sep 2025 00:53:58 +0900
+Subject: [PATCH 2/3] add source repo of tinylora-c3
+
+---
+ variants/esp32c3/diy/tinylora_c3/platformio.ini | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/variants/esp32c3/diy/tinylora_c3/platformio.ini b/variants/esp32c3/diy/tinylora_c3/platformio.ini
+index 750d8e4a24..39af2445b7 100644
+--- a/variants/esp32c3/diy/tinylora_c3/platformio.ini
++++ b/variants/esp32c3/diy/tinylora_c3/platformio.ini
+@@ -1,3 +1,4 @@
++;TinyLora-C3, https://github.com/Mymetu/TinyLora-C3
+ [env:tinylora_c3]
+ extends = esp32c3_base
+ board = esp32-c3-devkitm-1
+
+From becb258e7b9dfa3d179f6bbe86352b753410217c Mon Sep 17 00:00:00 2001
+From: Kazagumo <LachesisLegion@gmail.com>
+Date: Thu, 4 Sep 2025 13:20:42 +0900
+Subject: [PATCH 3/3] autoformat by trunk
+
+---
+ variants/esp32c3/diy/tinylora_c3/variant.h | 27 +++++++++++-----------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
+
+diff --git a/variants/esp32c3/diy/tinylora_c3/variant.h b/variants/esp32c3/diy/tinylora_c3/variant.h
+index 257559f652..e2d800f418 100644
+--- a/variants/esp32c3/diy/tinylora_c3/variant.h
++++ b/variants/esp32c3/diy/tinylora_c3/variant.h
+@@ -2,13 +2,14 @@
+ #define _VARIANT_TINYLORA_C3_
+ 
+ // Board pins configuration for TinyLoRa-C3
++// https://github.com/Mymetu/TinyLora-C3
+ 
+ // Button
+ #define BUTTON_PIN 9
+ 
+ // LED
+ #define LED_PIN 2
+-#define LED_STATE_ON 1  // Pulled high when LED is lit.
++#define LED_STATE_ON 1 // Pulled high when LED is lit.
+ 
+ // Screen & GPS are not present.
+ #define HAS_SCREEN 0
+@@ -28,19 +29,19 @@
+ #define LORA_CS 8
+ 
+ // LoRa
+-#define LORA_DIO0 RADIOLIB_NC   // NC
+-#define LORA_DIO1 3             // IRQ
+-#define LORA_DIO2 RADIOLIB_NC   // Attached internally to rfswitch.
+-#define LORA_BUSY 4             
+-#define LORA_RESET 5            
+-
+-#define SX126X_CS       LORA_CS
+-#define SX126X_DIO1     LORA_DIO1
+-#define SX126X_BUSY     LORA_BUSY
+-#define SX126X_RESET    LORA_RESET
++#define LORA_DIO0 RADIOLIB_NC // NC
++#define LORA_DIO1 3           // IRQ
++#define LORA_DIO2 RADIOLIB_NC // Attached internally to rfswitch.
++#define LORA_BUSY 4
++#define LORA_RESET 5
++
++#define SX126X_CS LORA_CS
++#define SX126X_DIO1 LORA_DIO1
++#define SX126X_BUSY LORA_BUSY
++#define SX126X_RESET LORA_RESET
+ #define SX126X_DIO2_AS_RF_SWITCH
+ 
+-/* 
++/*
+ 
+ Tested modules:
+ | Mfr          | Module           | TCXO | RF Switch | Notes                                 |
+@@ -56,6 +57,6 @@ Tested modules:
+ */
+ 
+ #define SX126X_DIO3_TCXO_VOLTAGE 1.8 // reserved for HT-RA62
+-#define TCXO_OPTIONAL // make it so that the firmware can try both TCXO and XTAL
++#define TCXO_OPTIONAL                // make it so that the firmware can try both TCXO and XTAL
+ 
+ #endif
+\ No newline at end of file
